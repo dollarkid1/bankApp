@@ -66,7 +66,7 @@ public class Customer {
         this.password = password;
     }
 
-    public List getAccounts() {
+    public List<Account> getAccounts() {
         return accounts;
     }
 }
