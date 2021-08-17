@@ -19,7 +19,11 @@ public class CustomerRepo {
         this.customers = customers;
     }
 
-    static {
+    static{
+        reset ();
+    }
+
+    public static void reset() {
         Customer john = new Customer ();
         john.setBvn (BankService.generateBvn ());
         john.getEmail ("john@doe.com");

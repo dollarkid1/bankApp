@@ -29,4 +29,9 @@ public class BankService {
     private static void setCurrentAccountNumber(long currentAccountNumber){
         BankService.currentAccountNumber = currentAccountNumber;
     }
+
+    public static void reset(){
+        currentBVN = 2;
+        currentAccountNumber = 0000110003;
+    }
 }

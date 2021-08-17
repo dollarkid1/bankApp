@@ -6,6 +6,7 @@ import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankException;
 import com.maven.bank.exceptions.MavenBankTransactionException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,16 +40,16 @@ class AccountServiceImplTest {
         bessie.setPhone ("90876543211");
     }
 
-//    @AfterEach
-//    void tearDown(){
-//
-//    }
+    @AfterEach
+    void tearDown(){
+        BankService.reset ();
+        CustomerRepo.reset ();
+    }
     @Test
     void openSavingsAccount(){
 
         assertTrue(abu.getAccounts ().isEmpty ());
         assertEquals (0000110003, BankService.getCurrentAccountNumber());
-        assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
             assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
@@ -97,7 +98,6 @@ class AccountServiceImplTest {
 
         assertTrue(abu.getAccounts ().isEmpty ());
         assertEquals (0000110003, BankService.getCurrentAccountNumber());
-        assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.CURRENT);
             assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
@@ -135,7 +135,6 @@ class AccountServiceImplTest {
 
         assertTrue(abu.getAccounts ().isEmpty ());
         assertEquals (0000110003, BankService.getCurrentAccountNumber());
-        assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
             assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
