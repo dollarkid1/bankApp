@@ -115,13 +115,13 @@ class AccountServiceImplTest {
     void openDifferentTypeOfAccountForTheSameCustomer(){
         try{
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
-            assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
-            assertEquals (1, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertEquals (1, abu.getAccounts ().size ());
             assertEquals (newAccountNumber, abu.getAccounts ( ).get (0).getAccountNumber ( ));
+
             newAccountNumber = accountService.openAccount (abu, AccountType.CURRENT);
-            assertEquals (2, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110005, BankService.getCurrentAccountNumber ( ));
             assertEquals (2, abu.getAccounts ().size ());
             assertEquals (newAccountNumber, abu.getAccounts ().get (1).getAccountNumber ());
 
@@ -140,14 +140,14 @@ class AccountServiceImplTest {
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
             assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
-            assertEquals (0000110003, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertFalse (abu.getAccounts ( ).isEmpty ( ));
             assertEquals (newAccountNumber, abu.getAccounts ( ).get (0).getAccountNumber ( ));
 
             newAccountNumber = accountService.openAccount (bessie, AccountType.SAVINGS);
-            assertEquals (2, CustomerRepo.getCustomers ().size ());
-            assertEquals (2, BankService.getCurrentAccountNumber ( ));
+            assertEquals (4, CustomerRepo.getCustomers ().size ());
+            assertEquals (0000110005, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (bessie.getBvn ( )));
             assertFalse (bessie.getAccounts ( ).isEmpty ( ));
             assertEquals (1, bessie.getAccounts ().size ());
@@ -162,12 +162,12 @@ class AccountServiceImplTest {
     @Test
     void deposit(){
         try{
-            Account johnSavingsAccount = accountService.findAccount (1);
+            Account johnSavingsAccount = accountService.findAccount (0000110001);
             assertEquals (BigDecimal.ZERO, johnSavingsAccount.getBalance ());
 
-            BigDecimal accountBalance = accountService.deposit (new BigDecimal (50000), 1);
+            BigDecimal accountBalance = accountService.deposit (new BigDecimal (50000), 0000110001);
 
-            johnSavingsAccount = accountService.findAccount (1);
+            johnSavingsAccount = accountService.findAccount (0000110001);
             assertEquals (accountBalance, johnSavingsAccount.getBalance ());
         } catch (MavenBankTransactionException ex) {
             ex.printStackTrace ( );
@@ -176,13 +176,39 @@ class AccountServiceImplTest {
         }
     }
 
+    @Test
+    void depositNegativeAmount(){
+        assertThrows (MavenBankTransactionException.class,
+                () -> accountService.deposit (new BigDecimal (-5000), 0000110001));
+
+    }
+
+    @Test
+    void depositWithVeryLargeAmount(){
+        try{
+            Account johnSavingsAccount = accountService.findAccount (0000110001);
+            assertEquals (BigDecimal.ZERO, johnSavingsAccount.getBalance ());
+            BigDecimal depositAmount = new BigDecimal ("10000000000000000000");
+
+            BigDecimal accountBalance = accountService.deposit (depositAmount, 0000110001);
+
+            johnSavingsAccount = accountService.findAccount (0000110001);
+            assertEquals (depositAmount, johnSavingsAccount.getBalance ());
+        } catch (MavenBankTransactionException ex) {
+            ex.printStackTrace ( );
+        }catch (MavenBankException ex){
+            ex.printStackTrace ();
+        }
+    }
+
+
 
     @Test
     void findAccount(){
         try{
-            Account johnCurrentAccount = accountService.findAccount (2);
+            Account johnCurrentAccount = accountService.findAccount (0000110002);
             assertNotNull (johnCurrentAccount);
-            assertEquals (2,johnCurrentAccount.getAccountNumber ());
+            assertEquals (0000110002,johnCurrentAccount.getAccountNumber ());
         }catch (MavenBankException ex){
             ex.printStackTrace ();
         }

@@ -29,6 +29,9 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public BigDecimal deposit(BigDecimal amount, long accountNumber) throws MavenBankException {
+        if (amount.compareTo (BigDecimal.ZERO) < 0){
+            throw new MavenBankTransactionException ( "Deposit amount cannot be Negative!!" );
+        }
         BigDecimal newBalance = BigDecimal.ZERO;
         Account depositAccount = findAccount (accountNumber);
         newBalance = depositAccount.getBalance ().add (amount);
