@@ -2,7 +2,7 @@ package com.maven.bank.services;
 
 public class BankService {
     private static long currentBVN = 2;
-    private static long currentAccountNumber = 3;
+    private static long currentAccountNumber = 0000110003;
     public static long generateBvn(){
         currentBVN++;
         return currentBVN;

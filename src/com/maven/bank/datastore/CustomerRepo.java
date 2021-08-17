@@ -26,10 +26,10 @@ public class CustomerRepo {
         john.setFirstName ("john");
         john.setSurname ("doe");
         john.setPhone ("12345678901");
-        Account johnSavingsAccount = new Account (1, AccountType.SAVINGS);
+        Account johnSavingsAccount = new Account (0000110001, AccountType.SAVINGS);
         johnSavingsAccount.setTypeOfAccount (AccountType.SAVINGS);
         john.getAccounts ().add (johnSavingsAccount);
-        Account johnCurrentAccount = new Account ( 2, AccountType.CURRENT, new BigDecimal (50000000));
+        Account johnCurrentAccount = new Account ( 0000110002, AccountType.CURRENT, new BigDecimal (50000000));
         john.getAccounts ().add (johnCurrentAccount);
         customers.put (john.getBvn (), john);
 
@@ -40,7 +40,7 @@ public class CustomerRepo {
         jane.setSurname ("blackie");
         jane.setPhone ("90876543211");
 
-        Account janeSavingsAccount = new Account ( 3, AccountType.SAVINGS  );
+        Account janeSavingsAccount = new Account ( 0000110003, AccountType.SAVINGS  );
         jane.getAccounts ().add (janeSavingsAccount);
         customers.put (jane.getBvn (), jane);
     }

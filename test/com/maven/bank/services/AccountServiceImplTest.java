@@ -26,15 +26,15 @@ class AccountServiceImplTest {
         accountService = new AccountServiceImpl ();
         abu = new Customer ();
         abu.setBvn (BankService.generateBvn ());
-        abu.getEmail ("john@doe.com");
+        abu.getEmail ("abu@danladi.com");
         abu.setFirstName ("john");
-        abu.setSurname ("doe");
+        abu.setSurname ("danladi");
         abu.setPhone ("12345678901");
 
         bessie = new Customer ();
         bessie.setBvn (BankService.generateBvn ());
-        bessie.getEmail ("jane@blackie.com");
-        bessie.setFirstName ("jane");
+        bessie.getEmail ("bessie@blackie.com");
+        bessie.setFirstName ("bessie");
         bessie.setSurname ("blackie");
         bessie.setPhone ("90876543211");
     }
@@ -47,12 +47,12 @@ class AccountServiceImplTest {
     void openSavingsAccount(){
 
         assertTrue(abu.getAccounts ().isEmpty ());
-        assertEquals (3, BankService.getCurrentAccountNumber());
+        assertEquals (0000110003, BankService.getCurrentAccountNumber());
         assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
             assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
-            assertEquals (4, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertFalse (abu.getAccounts ( ).isEmpty ( ));
             System.out.println (abu.getAccounts ( ).get (0));
@@ -81,24 +81,26 @@ class AccountServiceImplTest {
         Customer john = johnOptional.get ();
 
 //        Customer john = CustomerRepo.getCustomers ( ).get ((long)1 );
-        assertEquals (3, BankService.getCurrentAccountNumber ( ));
+        assertEquals (0000110003, BankService.getCurrentAccountNumber ( ));
+        assertNotNull (john);
+        assertNotNull (john.getAccounts ());
         assertFalse (john.getAccounts ( ).isEmpty ( ));
         assertEquals (AccountType.SAVINGS, john.getAccounts ( ).get (0).getTypeOfAccount ());
 
         assertThrows (MavenBankException.class, ()-> accountService.openAccount (john, AccountType.SAVINGS));
-        assertEquals (3,BankService.getCurrentAccountNumber ());
+        assertEquals (0000110003,BankService.getCurrentAccountNumber ());
         assertEquals (2, john.getAccounts ().size ());
     }
 
     @Test
     void openAccountForCurrentAccount(){
-        assertTrue(CustomerRepo.getCustomers ().isEmpty ());
-        assertEquals (0, BankService.getCurrentAccountNumber());
+
+        assertTrue(abu.getAccounts ().isEmpty ());
+        assertEquals (0000110003, BankService.getCurrentAccountNumber());
         assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.CURRENT);
-            assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
-            assertEquals (1, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertFalse (abu.getAccounts ( ).isEmpty ( ));
             System.out.println (abu.getAccounts ( ).get (0));
@@ -132,13 +134,13 @@ class AccountServiceImplTest {
     @Test
     void openSavingsAccountForANewCustomer(){
 
-        assertTrue(CustomerRepo.getCustomers ().isEmpty ());
-        assertEquals (0, BankService.getCurrentAccountNumber());
+        assertTrue(abu.getAccounts ().isEmpty ());
+        assertEquals (0000110003, BankService.getCurrentAccountNumber());
         assertFalse (CustomerRepo.getCustomers ().containsKey (abu.getBvn ()));
         try {
             long newAccountNumber = accountService.openAccount (abu, AccountType.SAVINGS);
             assertFalse (CustomerRepo.getCustomers ( ).isEmpty ( ));
-            assertEquals (1, BankService.getCurrentAccountNumber ( ));
+            assertEquals (0000110003, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertFalse (abu.getAccounts ( ).isEmpty ( ));
             assertEquals (newAccountNumber, abu.getAccounts ( ).get (0).getAccountNumber ( ));
