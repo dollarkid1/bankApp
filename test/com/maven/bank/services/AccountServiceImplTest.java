@@ -103,7 +103,6 @@ class AccountServiceImplTest {
             assertEquals (0000110004, BankService.getCurrentAccountNumber ( ));
             assertTrue (CustomerRepo.getCustomers ( ).containsKey (abu.getBvn ( )));
             assertFalse (abu.getAccounts ( ).isEmpty ( ));
-            System.out.println (abu.getAccounts ( ).get (0));
             assertEquals (newAccountNumber, abu.getAccounts ( ).get (0).getAccountNumber ( ));
         }catch(MavenBankException ex){
             ex.printStackTrace ();
