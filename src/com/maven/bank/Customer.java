@@ -69,4 +69,11 @@ public class Customer {
     public List<Account> getAccounts() {
         return accounts;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "firstName='" + firstName + '\'' +
+                '}';
+    }
 }

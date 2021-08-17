@@ -27,6 +27,7 @@ public class CustomerRepo {
         john.setSurname ("doe");
         john.setPhone ("12345678901");
         Account johnSavingsAccount = new Account (1, AccountType.SAVINGS);
+        johnSavingsAccount.setTypeOfAccount (AccountType.SAVINGS);
         john.getAccounts ().add (johnSavingsAccount);
         Account johnCurrentAccount = new Account ( 2, AccountType.CURRENT, new BigDecimal (50000000));
         john.getAccounts ().add (johnCurrentAccount);

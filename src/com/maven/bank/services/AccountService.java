@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public interface AccountService {
     public long openAccount(Customer theCustomer, AccountType type) throws MavenBankException;
 
-    public BigDecimal deposit(BigDecimal amount, long accountNumber) throws MavenBankTransactionException;
+    public BigDecimal deposit(BigDecimal amount, long accountNumber) throws MavenBankException;
 
     public Account findAccount(long accountNumber) throws MavenBankException;
 

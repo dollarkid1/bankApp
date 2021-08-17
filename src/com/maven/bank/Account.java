@@ -8,7 +8,7 @@ public class Account {
     private long accountNumber;
     private AccountType type;
     private AccountType typeOfAccount;
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
     private String accountPin;
 
     public Account (){}
