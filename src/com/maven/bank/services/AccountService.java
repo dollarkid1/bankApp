@@ -16,4 +16,6 @@ public interface AccountService {
     public Account findAccount(long accountNumber) throws MavenBankException;
 
     public Account findAccount(Customer customer, long accountNumber) throws MavenBankException;
+
+    BigDecimal withdraw(BigDecimal amount, long accountNumber, String pin) throws MavenBankException;
 }

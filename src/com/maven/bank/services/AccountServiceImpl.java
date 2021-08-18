@@ -64,6 +64,19 @@ public class AccountServiceImpl implements AccountService{
         return null;
     }
 
+    @Override
+    public BigDecimal withdraw(BigDecimal amount, long accountNumber, String pin) throws MavenBankException {
+        if (amount.compareTo (BigDecimal.ZERO) < 0){
+            throw new MavenBankTransactionException ( "Withdrawal amount cannot be Negative!!" );
+        }
+        BigDecimal newBalance = BigDecimal.ZERO;
+        Account withdrawalAccount = findAccount (accountNumber);
+        newBalance =  withdrawalAccount.getBalance ().subtract (amount);
+        withdrawalAccount.setBalance (newBalance);
+        return newBalance;
+
+    }
+
     private boolean accountTypeExists(Customer aCustomer, AccountType type){
         boolean accountTypeExists = false;
         for(Account customerAccount : aCustomer.getAccounts ()){
@@ -74,5 +87,6 @@ public class AccountServiceImpl implements AccountService{
         }
         return accountTypeExists;
     }
+
 
 }

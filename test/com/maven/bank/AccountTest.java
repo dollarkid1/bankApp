@@ -2,6 +2,7 @@ package com.maven.bank;
 
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
+import com.maven.bank.exceptions.MavenBankTransactionException;
 import com.maven.bank.services.BankService;
 import org.junit.jupiter.api.*;
 
@@ -21,7 +22,7 @@ public class AccountTest {
     }
 
     @Test
-    void openAccount(){
+    void openAccount() throws MavenBankTransactionException {
         john.setBvn (BankService.generateBvn ());
         john.getEmail ("john@doe.com");
         john.setFirstName ("john");
