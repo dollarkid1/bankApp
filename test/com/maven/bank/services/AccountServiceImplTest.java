@@ -177,8 +177,15 @@ class AccountServiceImplTest {
 
     @Test
     void depositNegativeAmount(){
-        assertThrows (MavenBankTransactionException.class,
+        assertThrows (MavenBankException.class,
                 () -> accountService.deposit (new BigDecimal (-5000), 0000110001));
+
+    }
+
+    @Test
+    void depositToInvalidAccountNumber(){
+        assertThrows (MavenBankException.class,
+                () -> accountService.deposit (new BigDecimal (-5000), 1000110001));
 
     }
 
@@ -251,6 +258,12 @@ class AccountServiceImplTest {
     void withdrawNegativeAmount() throws MavenBankException {
         assertThrows (MavenBankTransactionException.class,
                 () -> accountService.withdraw(new BigDecimal (-5000), 0000110001, Account.getAccountPin ()));
+    }
+
+    @Test
+    void withdrawFromAnInvalidAccount() throws MavenBankException {
+        assertThrows (MavenBankException.class,
+                () -> accountService.withdraw(new BigDecimal (5000), 00110001, Account.getAccountPin ()));
     }
 
     @Test
