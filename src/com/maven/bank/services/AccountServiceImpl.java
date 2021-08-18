@@ -5,6 +5,7 @@ import com.maven.bank.Customer;
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankException;
+import com.maven.bank.exceptions.MavenBankInsufficientFundsException;
 import com.maven.bank.exceptions.MavenBankTransactionException;
 
 import java.math.BigDecimal;
@@ -68,6 +69,10 @@ public class AccountServiceImpl implements AccountService{
     public BigDecimal withdraw(BigDecimal amount, long accountNumber, String pin) throws MavenBankException {
         if (amount.compareTo (BigDecimal.ZERO) < BigDecimal.ONE.intValue ()){
             throw new MavenBankTransactionException ( "Withdrawal amount cannot be Negative!!" );
+        }
+        Account depositAccount = findAccount (accountNumber);
+        if (amount.compareTo (depositAccount.getBalance ()) > 0){
+            throw new MavenBankInsufficientFundsException ( "Insufficient Funds" );
         }
         BigDecimal newBalance = BigDecimal.ZERO;
         Account withdrawalAccount = findAccount (accountNumber);

@@ -5,6 +5,7 @@ import com.maven.bank.Customer;
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankException;
+import com.maven.bank.exceptions.MavenBankInsufficientFundsException;
 import com.maven.bank.exceptions.MavenBankTransactionException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -250,5 +251,19 @@ class AccountServiceImplTest {
     void withdrawNegativeAmount() throws MavenBankException {
         assertThrows (MavenBankTransactionException.class,
                 () -> accountService.withdraw(new BigDecimal (-5000), 0000110001, Account.getAccountPin ()));
+    }
+
+    @Test
+    void withdrawAmountHigherThanAccountBalance() throws MavenBankException {
+        try{
+            Account johnSavingsAccount = accountService.findAccount (0000110001);
+            BigDecimal accountBalance = accountService.deposit (new BigDecimal (50000), 0000110001);
+            johnSavingsAccount = accountService.findAccount (0000110001);
+            assertEquals (accountBalance, johnSavingsAccount.getBalance ());
+        } catch (MavenBankException e) {
+            e.printStackTrace ( );
+        }
+        assertThrows (MavenBankInsufficientFundsException.class,
+                () -> accountService.withdraw(new BigDecimal (70000), 0000110001, Account.getAccountPin ()));
     }
 }
