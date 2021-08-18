@@ -23,8 +23,11 @@ class LoanServiceImplTest {
     @BeforeEach
     void setUp() {
         accountService = new AccountServiceImpl();
+        loanService = new LoanServiceImpl();
+
+
         johnLoan = new Loan();
-        johnLoan.setLoanAmount(BigDecimal.valueOf(50_000_000));
+        johnLoan.setLoanAmount(BigDecimal.valueOf(9_000_000));
         johnLoan.setApplyDate(LocalDateTime.now());
         johnLoan.setInterestRate(0.1);
         johnLoan.setStatus(LoanStatus.NEW);
@@ -47,7 +50,7 @@ class LoanServiceImplTest {
     void approveLoan(){
         try{
             Account johnCurrentAccount = accountService.findAccount (0000110002);
-            assertNotNull(johnCurrentAccount.getAccountLoan());
+            assertNull(johnCurrentAccount.getAccountLoan());
             johnCurrentAccount.setAccountLoan(johnLoan);
 
             Loan processedLoan = loanService.approveLoan(johnCurrentAccount);

@@ -6,7 +6,7 @@ public class MavenBankLoanException extends MavenBankException {
     }
 
     public MavenBankLoanException(String message) {
-        super (message);
+        super(message);
     }
 
     public MavenBankLoanException(String message, Throwable ex) {
