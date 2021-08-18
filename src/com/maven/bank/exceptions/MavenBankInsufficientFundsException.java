@@ -1,6 +1,7 @@
 package com.maven.bank.exceptions;
 
 public class MavenBankInsufficientFundsException extends MavenBankException{
+
     public MavenBankInsufficientFundsException() {
         super ( );
     }

@@ -1,5 +1,8 @@
 package com.maven.bank;
 
+import Entities.Account;
+import Entities.Customer;
+import Entities.SavingsAccount;
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankTransactionException;
@@ -13,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AccountTest {
 
     Customer john;
-    Account johnAccount;
+    SavingsAccount johnSavingsAccount;
     @BeforeEach
     void setUp(){
         john = new Customer();
-        johnAccount = new Account();
+        johnSavingsAccount = new SavingsAccount();
 
     }
 
@@ -29,11 +32,10 @@ public class AccountTest {
         john.setSurname ("doe");
         john.setPhone ("12345678901");
 
-        johnAccount.setAccountNumber(BankService.generateAccountNumber ());
-        johnAccount.setTypeOfAccount (AccountType.SAVINGS);
-        johnAccount.setBalance (new BigDecimal (5000));
-        johnAccount.setAccountPin ("1470");
-        john.getAccounts().add(johnAccount);
+        johnSavingsAccount.setAccountNumber(BankService.generateAccountNumber ());
+        johnSavingsAccount.setBalance (new BigDecimal (5000));
+        johnSavingsAccount.setAccountPin ("1470");
+        john.getAccounts().add(johnSavingsAccount);
 
         assertTrue(CustomerRepo.getCustomers().isEmpty ());
 

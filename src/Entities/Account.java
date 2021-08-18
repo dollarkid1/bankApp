@@ -1,28 +1,37 @@
-package com.maven.bank;
+package Entities;
 
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.exceptions.MavenBankTransactionException;
 
 import java.math.BigDecimal;
 
-public class Account {
+public abstract class Account {
     private long accountNumber;
-    private AccountType type;
-    private AccountType typeOfAccount;
+//    private AccountType type;
+//    private AccountType typeOfAccount;
     private BigDecimal balance = BigDecimal.ZERO;
     private String pin;
     private static String accountPin;
+    private Loan accountLoan;
+
+    public Loan getAccountLoan() {
+        return accountLoan;
+    }
+
+    public void setAccountLoan(Loan accountLoan) {
+        this.accountLoan = accountLoan;
+    }
 
     public Account (){}
 
-    public Account(long accountNumber, AccountType type){
+    public Account(long accountNumber){
 
         this.accountNumber = accountNumber;
-        this.type = type;
+
     }
 
-    public Account(long accountNumber, AccountType type, BigDecimal balance) {
-        this(accountNumber, type);
+    public Account(long accountNumber, BigDecimal balance) {
+
         this.balance = balance;
         this.pin = pin;
     }
@@ -37,13 +46,9 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public AccountType getTypeOfAccount() {
-        return typeOfAccount;
-    }
 
-    public void setTypeOfAccount(AccountType typeOfAccount) {
-        this.typeOfAccount = typeOfAccount;
-    }
+
+
 
     public BigDecimal getBalance() {
         return balance;

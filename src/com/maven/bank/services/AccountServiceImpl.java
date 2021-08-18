@@ -1,7 +1,9 @@
 package com.maven.bank.services;
 
-import com.maven.bank.Account;
-import com.maven.bank.Customer;
+import Entities.Account;
+import Entities.CurrentAccount;
+import Entities.Customer;
+import Entities.SavingsAccount;
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankException;
@@ -13,16 +15,40 @@ import java.math.BigDecimal;
 public class AccountServiceImpl implements AccountService{
     @Override
     public long openAccount(Customer theCustomer, AccountType type) throws MavenBankException {
-        if (theCustomer == null || type == null){
+       long accountNumber = BigDecimal.ZERO.longValue();
+        if (type == AccountType.SAVINGSACCOUNT)
+           accountNumber =  openSavingsAccount(theCustomer);
+        else if (type == AccountType.CURRENTACCOUNT)
+            accountNumber = openCurrentAccount(theCustomer);
+        return accountNumber;
+    }
+
+    @Override
+    public long openSavingsAccount(Customer theCustomer) throws MavenBankException {
+        if (theCustomer == null){
             throw new MavenBankException ( "customer and account type required to open new account" );
         }
-        if (accountTypeExists (theCustomer, type )){
+        Account newAccount = new SavingsAccount();
+        if (accountTypeExists (theCustomer, newAccount.getClass().getTypeName() )){
             throw new MavenBankException ( "Customer already has the requested account type " );
         }
 
-        Account newAccount = new Account ();
         newAccount.setAccountNumber (BankService.generateAccountNumber ());
-        newAccount.setTypeOfAccount (type);
+        theCustomer.getAccounts ().add (newAccount);
+        CustomerRepo.getCustomers ().put (theCustomer.getBvn ( ), theCustomer);
+        return  newAccount.getAccountNumber ();
+    }
+
+    @Override
+    public long openCurrentAccount(Customer theCustomer) throws MavenBankException {
+        if (theCustomer == null){
+            throw new MavenBankException ( "customer and account type required to open new account" );
+        }
+        Account newAccount = new CurrentAccount();
+        if (accountTypeExists (theCustomer,  newAccount.getClass().getTypeName()  )){
+            throw new MavenBankException ( "Customer already has the requested account type " );
+        }
+        newAccount.setAccountNumber (BankService.generateAccountNumber ());
         theCustomer.getAccounts ().add (newAccount);
         CustomerRepo.getCustomers ().put (theCustomer.getBvn ( ), theCustomer);
         return  newAccount.getAccountNumber ();
@@ -31,7 +57,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public BigDecimal deposit(BigDecimal amount, long accountNumber) throws MavenBankException {
         Account depositAccount = findAccount (accountNumber);
-        validDebitTransaction (amount, depositAccount);
+        validTransaction (amount, depositAccount);
 
         BigDecimal newBalance = BigDecimal.ZERO;
         newBalance = depositAccount.getBalance ().add (amount);
@@ -65,17 +91,24 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public BigDecimal withdraw(BigDecimal amount, long accountNumber, String pin) throws MavenBankException {
-        if (amount.compareTo (BigDecimal.ZERO) < BigDecimal.ONE.intValue ()){
-            throw new MavenBankTransactionException ( "Withdrawal amount cannot be Negative!!" );
-        }
-        Account theAccount = findAccount (accountNumber);
-        if (theAccount == null){
-            throw new MavenBankTransactionException ( "Withdrawal account not found" );
-        }
-        if (amount.compareTo (theAccount.getBalance ()) > 0){
-            throw new MavenBankInsufficientFundsException ( "Insufficient Funds" );
-        }
+    public void applyForOverdraft(Account theAccount) {
+        // TODO
+    }
+
+    @Override
+    public void applyForLoan(Account theAccount) {
+
+    }
+
+    @Override
+    public BigDecimal withdraw(BigDecimal amount, long accountNumber) throws MavenBankException {
+       Account theAccount = findAccount(accountNumber);
+       validTransaction(amount, theAccount);
+       try{
+           checkForSufficientBalance(amount, theAccount);
+       } catch (MavenBankInsufficientFundsException insufficientFundsException) {
+
+       }
         BigDecimal newBalance = debitAccount (amount, accountNumber);
 
         return newBalance;
@@ -91,21 +124,30 @@ public class AccountServiceImpl implements AccountService{
 
     }
 
-    private void validDebitTransaction(BigDecimal amount, Account account) throws MavenBankTransactionException, MavenBankException{
-        boolean result = false;
-        if (amount.compareTo (BigDecimal.ZERO) < 0){
-            throw new MavenBankException ( "Deposit amount cannot be negative" );
+    private void validTransaction(BigDecimal amount, Account account) throws MavenBankTransactionException, MavenBankException{
+        if (amount.compareTo (BigDecimal.ZERO) < BigDecimal.ONE.intValue ()){
+            throw new MavenBankTransactionException ( "Transaction amount cannot be Negative!!" );
         }
 
         if (account == null){
-            throw new MavenBankTransactionException ( "Withdrawal account not found" );
+            throw new MavenBankTransactionException ( "Transaction account not found" );
+        }
+
+    }
+
+
+
+    private void checkForSufficientBalance(BigDecimal amount, Account account) throws MavenBankInsufficientFundsException {
+        if (amount.compareTo (account.getBalance()) < BigDecimal.ZERO.intValue()){
+            throw new MavenBankInsufficientFundsException("Insufficient Funds");
         }
     }
 
-    private boolean accountTypeExists(Customer aCustomer, AccountType type){
+    private boolean accountTypeExists(Customer aCustomer, String typeName){
         boolean accountTypeExists = false;
         for(Account customerAccount : aCustomer.getAccounts ()){
-            if (customerAccount.getTypeOfAccount () == type){
+            ;
+            if (customerAccount.getClass().getTypeName().equals(typeName)){
                 accountTypeExists = true;
                 break;
             }
