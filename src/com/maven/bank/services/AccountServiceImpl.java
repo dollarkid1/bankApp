@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public BigDecimal withdraw(BigDecimal amount, long accountNumber, String pin) throws MavenBankException {
-        if (amount.compareTo (BigDecimal.ZERO) < 0){
+        if (amount.compareTo (BigDecimal.ZERO) < BigDecimal.ONE.intValue ()){
             throw new MavenBankTransactionException ( "Withdrawal amount cannot be Negative!!" );
         }
         BigDecimal newBalance = BigDecimal.ZERO;
