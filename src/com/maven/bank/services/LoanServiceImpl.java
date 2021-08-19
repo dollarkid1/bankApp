@@ -1,39 +1,67 @@
 package com.maven.bank.services;
 
 import Entities.Account;
-import Entities.Loan;
-import com.maven.bank.datastore.LoanStatus;
+import Entities.Customer;
+import Entities.LoanRequest;
+import com.maven.bank.datastore.LoanRequestStatus;
 import com.maven.bank.exceptions.MavenBankLoanException;
-import com.maven.bank.exceptions.MavenBankTransactionException;
 
 import java.math.BigDecimal;
 
 public class LoanServiceImpl implements LoanService {
+
     @Override
-    public Loan approveLoan(Account accountSeekingLoan)throws MavenBankLoanException {
+    public LoanRequest approveLoanRequest(Account accountSeekingLoan) throws MavenBankLoanException {
         if (accountSeekingLoan == null){
             throw new MavenBankLoanException("An Account is required to Process the Loan");
         }
-        if (accountSeekingLoan.getAccountLoan() == null){
-            throw new MavenBankLoanException("No loan provided for processing");
+        if (accountSeekingLoan.getAccountLoanRequest() == null){
+            throw new MavenBankLoanException("No loan request provided for processing");
         }
 
-       Loan theLoan = accountSeekingLoan.getAccountLoan();
-       theLoan.setStatus(decisionOnLoan(accountSeekingLoan));
+        LoanRequest theLoanRequest = accountSeekingLoan.getAccountLoanRequest();
+        theLoanRequest.setStatus(decisionOnLoanRequestWithAccountBalance(accountSeekingLoan));
 
-        return theLoan;
+        return theLoanRequest;
+
     }
 
-    private LoanStatus decisionOnLoan( Account accountSeekingLoan)throws MavenBankLoanException{
+    @Override
+    public LoanRequest approveLoanRequest(Customer customer,Account accountSeekingLoan)throws MavenBankLoanException {
+        return approveLoanRequest(accountSeekingLoan);
+    }
 
-        LoanStatus decision = LoanStatus.PENDING;
-        Loan theLoan = accountSeekingLoan.getAccountLoan();
+    private LoanRequestStatus decisionOnLoanRequestWithAccountBalance(Account accountSeekingLoan)throws MavenBankLoanException{
+
+        LoanRequestStatus decision = decisionOnLoanWIthAccountBalance(accountSeekingLoan);
+
+
+        return decision;
+    }
+
+    private LoanRequestStatus decisionOnLoanWIthAccountBalance(Account accountSeekingLoan)throws MavenBankLoanException{
+
+        LoanRequestStatus decision = LoanRequestStatus.PENDING;
+        LoanRequest theLoanRequest = accountSeekingLoan.getAccountLoanRequest();
         BigDecimal accountBalancePercentage = BigDecimal.valueOf(0.2);
         BigDecimal loanAmountApprovedAutomatically = accountSeekingLoan.getBalance().multiply(accountBalancePercentage);
-        if (theLoan.getLoanAmount().compareTo(loanAmountApprovedAutomatically) < BigDecimal.ZERO.intValue()){
-            decision = LoanStatus.APPROVED;
+        if (theLoanRequest.getLoanAmount().compareTo(loanAmountApprovedAutomatically) < BigDecimal.ZERO.intValue()){
+            decision = LoanRequestStatus.APPROVED;
         }
 
         return decision;
     }
+
+
+
+    private LoanRequestStatus decisionOnLoanWIthLengthRelationship( Account accountSeekingLoan)throws MavenBankLoanException{
+
+        LoanRequestStatus decision = LoanRequestStatus.PENDING;
+
+
+        return decision;
+    }
+
+
+
 }

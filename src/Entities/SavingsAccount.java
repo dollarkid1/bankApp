@@ -1,17 +1,21 @@
 package Entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class SavingsAccount extends Account{
     public SavingsAccount() {
+        setStartDate(LocalDateTime.now());
+
     }
 
     public SavingsAccount(long accountNumber) {
-       super.setAccountNumber(accountNumber);
+        this();
+        setAccountNumber(accountNumber);
     }
 
     public SavingsAccount(long accountNumber, BigDecimal balance) {
-        setAccountNumber(accountNumber);
+        this(accountNumber);
         setBalance(balance);
     }
 }

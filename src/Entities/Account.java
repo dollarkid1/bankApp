@@ -1,25 +1,29 @@
 package Entities;
 
-import com.maven.bank.datastore.AccountType;
 import com.maven.bank.exceptions.MavenBankTransactionException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Account {
     private long accountNumber;
 //    private AccountType type;
-//    private AccountType typeOfAccount;
+
     private BigDecimal balance = BigDecimal.ZERO;
     private String pin;
     private static String accountPin;
-    private Loan accountLoan;
+    private LoanRequest accountLoanRequest;
+    private Set<BankTransaction> transactions = new HashSet<>();
+    private LocalDateTime startDate;
 
-    public Loan getAccountLoan() {
-        return accountLoan;
+    public LoanRequest getAccountLoanRequest() {
+        return accountLoanRequest;
     }
 
-    public void setAccountLoan(Loan accountLoan) {
-        this.accountLoan = accountLoan;
+    public void setAccountLoanRequest(LoanRequest accountLoanRequest) {
+        this.accountLoanRequest = accountLoanRequest;
     }
 
     public Account (){}
@@ -28,6 +32,14 @@ public abstract class Account {
 
         this.accountNumber = accountNumber;
 
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
     public Account(long accountNumber, BigDecimal balance) {
@@ -65,6 +77,14 @@ public abstract class Account {
     public void setAccountPin(String accountPin) throws MavenBankTransactionException {
         Account.accountPin = accountPin;
         validatePin (accountPin);
+    }
+
+    public Set<BankTransaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<BankTransaction> transactions) {
+        this.transactions = transactions;
     }
 
     public void validatePin(String pin) throws MavenBankTransactionException {

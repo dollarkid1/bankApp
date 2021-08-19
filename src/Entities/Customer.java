@@ -2,6 +2,8 @@ package Entities;
 
 import Entities.Account;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +14,14 @@ public class Customer {
     private String email;
     private String phone;
     private String password;
+    private LocalDateTime relationshipStartDate;
+    private List<Account> accounts = new ArrayList<> ();
+
+
 
     public String getEmail() {
         return email;
     }
-
-    private List<Account> accounts = new ArrayList<> ();
 
     public long getBvn() {
         return bvn;
@@ -65,6 +69,14 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDateTime getRelationshipStartDate() {
+        return relationshipStartDate;
+    }
+
+    public void setRelationshipStartDate(LocalDateTime relationshipStartDate) {
+        this.relationshipStartDate = relationshipStartDate;
     }
 
     public List<Account> getAccounts() {

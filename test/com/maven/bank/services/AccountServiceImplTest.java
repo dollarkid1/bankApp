@@ -2,11 +2,8 @@ package com.maven.bank.services;
 
 import Entities.Account;
 import Entities.Customer;
-import Entities.Loan;
-import com.maven.bank.datastore.AccountType;
-import com.maven.bank.datastore.CustomerRepo;
-import com.maven.bank.datastore.LoanStatus;
-import com.maven.bank.datastore.LoanType;
+import Entities.LoanRequest;
+import com.maven.bank.datastore.*;
 import com.maven.bank.exceptions.MavenBankException;
 import com.maven.bank.exceptions.MavenBankInsufficientFundsException;
 import com.maven.bank.exceptions.MavenBankTransactionException;
@@ -275,18 +272,18 @@ class AccountServiceImplTest {
     }
     @Test
     void applyForLoan(){
-        Loan johnLoan = new Loan();
-        johnLoan.setLoanAmount(BigDecimal.valueOf(50_000_000));
-        johnLoan.setApplyDate(LocalDateTime.now());
-        johnLoan.setInterestRate(0.1);
-        johnLoan.setStatus(LoanStatus.NEW);
-        johnLoan.setTenor(24);
-        johnLoan.setTypeOfLoan(LoanType.SME);
+        LoanRequest johnLoanRequest = new LoanRequest();
+        johnLoanRequest.setLoanAmount(BigDecimal.valueOf(50_000_000));
+        johnLoanRequest.setApplyDate(LocalDateTime.now());
+        johnLoanRequest.setInterestRate(0.1);
+        johnLoanRequest.setStatus(LoanRequestStatus.NEW);
+        johnLoanRequest.setTenor(24);
+        johnLoanRequest.setTypeOfLoan(LoanType.SME);
 
         try{
             Account johnCurrentAccount = accountService.findAccount (0000110002);
-            assertNotNull(johnCurrentAccount.getAccountLoan());
-            johnCurrentAccount.setAccountLoan(johnLoan);
+            assertNotNull(johnCurrentAccount.getAccountLoanRequest());
+            johnCurrentAccount.setAccountLoanRequest(johnLoanRequest);
 
         } catch (MavenBankException e) {
             e.printStackTrace ( );
