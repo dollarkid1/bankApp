@@ -81,13 +81,14 @@ class LoanServiceImplTest {
     }
 
     @Test
-    void approveLoanRequestWithLengthOfRelation(){
+    void approveLoanRequestWithLengthOfRelationAndTransactionVolume(){
         try{
-            Account johnSavingsAccount = accountService.findAccount (0000110002);
+            Account johnSavingsAccount = accountService.findAccount (0000110001);
             Optional<Customer> optionalCustomer = CustomerRepo.getCustomers().values().stream().findFirst();
             Customer john = optionalCustomer.isPresent()? optionalCustomer.get() : null;
             assertNotNull(john);
             john.setRelationshipStartDate(johnSavingsAccount.getStartDate().minusYears(2));
+            assertEquals(BigDecimal.valueOf(450_000), johnSavingsAccount.getBalance());
             johnLoanRequest.setLoanAmount(BigDecimal.valueOf(3_000_000));
             johnSavingsAccount.setAccountLoanRequest(johnLoanRequest);
 

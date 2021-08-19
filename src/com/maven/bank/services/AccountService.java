@@ -1,9 +1,11 @@
 package com.maven.bank.services;
 
 import Entities.Account;
+import Entities.BankTransaction;
 import Entities.Customer;
 import com.maven.bank.datastore.AccountType;
 import com.maven.bank.exceptions.MavenBankException;
+import com.maven.bank.exceptions.MavenBankTransactionException;
 
 import java.math.BigDecimal;
 
@@ -23,4 +25,7 @@ public interface AccountService {
 
     public void  applyForOverdraft(Account theAccount);
     public void  applyForLoan(Account theAccount);
+
+    public void addBankTransaction(BankTransaction transaction, Account account) throws MavenBankException;
+
 }

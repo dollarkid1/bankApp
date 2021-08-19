@@ -1,10 +1,8 @@
 package com.maven.bank.services;
 
-import Entities.Account;
-import Entities.CurrentAccount;
-import Entities.Customer;
-import Entities.SavingsAccount;
+import Entities.*;
 import com.maven.bank.datastore.AccountType;
+import com.maven.bank.datastore.BankTransactionType;
 import com.maven.bank.datastore.CustomerRepo;
 import com.maven.bank.exceptions.MavenBankException;
 import com.maven.bank.exceptions.MavenBankInsufficientFundsException;
@@ -54,6 +52,7 @@ public class AccountServiceImpl implements AccountService{
         return  newAccount.getAccountNumber ();
     }
 
+
     @Override
     public BigDecimal deposit(BigDecimal amount, long accountNumber) throws MavenBankException {
         Account depositAccount = findAccount (accountNumber);
@@ -98,6 +97,20 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public void applyForLoan(Account theAccount) {
 
+    }
+
+    @Override
+    public void addBankTransaction(BankTransaction transaction, Account account) throws MavenBankException {
+        if (transaction == null || account == null){
+            throw new MavenBankTransactionException("Transaction and Account are required to add transaction");
+        }
+        if (transaction.getType() == BankTransactionType.DEPOSIT){
+            deposit(transaction.getAmount(),account.getAccountNumber());
+        }
+        else if (transaction.getType() == BankTransactionType.WITHDRAWAL){
+            withdraw(transaction.getAmount(),account.getAccountNumber());
+        }
+        account.getTransactions().add(transaction);
     }
 
     @Override

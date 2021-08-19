@@ -55,13 +55,16 @@ public class LoanServiceImpl implements LoanService {
 
 
     private LoanRequestStatus decisionOnLoanWIthLengthRelationship( Account accountSeekingLoan)throws MavenBankLoanException{
-
         LoanRequestStatus decision = LoanRequestStatus.PENDING;
-
-
         return decision;
     }
 
+    private LoanRequestStatus decisionOnLoanWIthLengthRelationshipAndTransactionVolume( Account accountSeekingLoan)throws MavenBankLoanException{
+        LoanRequestStatus decision = LoanRequestStatus.PENDING;
+        int minimumLengthOfRelation = 6;
+        BigDecimal relationVolumePercentage = BigDecimal.valueOf(0.2);
 
+        return decision;
+    }
 
 }
