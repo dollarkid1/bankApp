@@ -91,6 +91,8 @@ class LoanServiceImplTest {
             assertEquals(BigDecimal.valueOf(450_000), johnSavingsAccount.getBalance());
             johnLoanRequest.setLoanAmount(BigDecimal.valueOf(3_000_000));
             johnSavingsAccount.setAccountLoanRequest(johnLoanRequest);
+            LoanRequest johnLoanRequest  =loanService.approveLoanRequest(john, johnSavingsAccount);
+            assertEquals(LoanRequestStatus.APPROVED,johnLoanRequest.getStatus());
 
 
 

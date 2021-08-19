@@ -21,14 +21,21 @@ public class LoanServiceImpl implements LoanService {
 
         LoanRequest theLoanRequest = accountSeekingLoan.getAccountLoanRequest();
         theLoanRequest.setStatus(decisionOnLoanRequestWithAccountBalance(accountSeekingLoan));
-
         return theLoanRequest;
 
     }
 
     @Override
     public LoanRequest approveLoanRequest(Customer customer,Account accountSeekingLoan)throws MavenBankLoanException {
-        return approveLoanRequest(accountSeekingLoan);
+
+        LoanRequestStatus decision = decisionOnLoanWIthTotalCustomerBalance(customer, accountSeekingLoan);
+        LoanRequest theLoanRequest = accountSeekingLoan.getAccountLoanRequest();
+        if (decision != LoanRequestStatus.APPROVED){
+
+            theLoanRequest = approveLoanRequest(accountSeekingLoan);
+        }
+
+        return theLoanRequest;
     }
 
     private LoanRequestStatus decisionOnLoanRequestWithAccountBalance(Account accountSeekingLoan)throws MavenBankLoanException{
@@ -59,10 +66,22 @@ public class LoanServiceImpl implements LoanService {
         return decision;
     }
 
-    private LoanRequestStatus decisionOnLoanWIthLengthRelationshipAndTransactionVolume( Account accountSeekingLoan)throws MavenBankLoanException{
+    private LoanRequestStatus decisionOnLoanWIthTotalCustomerBalance(Customer customer, Account accountSeekingLoan)throws MavenBankLoanException{
         LoanRequestStatus decision = LoanRequestStatus.PENDING;
         int minimumLengthOfRelation = 6;
         BigDecimal relationVolumePercentage = BigDecimal.valueOf(0.2);
+
+        BigDecimal totalCustomerBalance = BigDecimal.ZERO;
+        if (customer.getAccounts().size() > BigDecimal.ONE.intValue()){
+            for (Account customerAccount : customer.getAccounts()){
+                totalCustomerBalance = totalCustomerBalance.add(customerAccount.getBalance());
+            }
+        }
+        BigDecimal loanAmountApprovedAutomatically = totalCustomerBalance.multiply(relationVolumePercentage);
+                if (accountSeekingLoan.getAccountLoanRequest().getLoanAmount().compareTo(loanAmountApprovedAutomatically)
+                < BigDecimal.ZERO.intValue()){
+                    decision = LoanRequestStatus.APPROVED;
+                }
 
         return decision;
     }
